@@ -11,7 +11,6 @@ import java.util.Comparator;
 import android.app.ExpandableListActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -21,27 +20,21 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupExpandListener;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.database.DatabaseAdapter;
 import com.example.database.EncounterAdapter;
 import com.example.database.PatientAdapter;
 import com.example.model.Encounter;
+import com.example.model.LabRequest;
 import com.example.model.Notes;
 import com.example.model.Patient;
 import com.example.model.Preferences;
-import com.example.model.ReferralHelper;
 import com.example.model.Rest;
 import com.example.parser.EncounterParser;
 import com.example.parser.PatientParser;
@@ -136,8 +129,8 @@ public class PatientInfoActivity extends ExpandableListActivity {
 	    /* retrieve patient's encounters from mobile DB */
 		encounters = db.getPatientEncounter(patient_id);
 			
-		
-		/* sort encounters based on encountered_data*/
+		if(encounters.size() > 0)
+		{/* sort encounters based on encountered_data*/
 			Collections.sort(encounters, new CustomComparator());
 		
 		//temp
@@ -155,7 +148,12 @@ public class PatientInfoActivity extends ExpandableListActivity {
 			}
 		
 			encounter = encounters.get(encounters.size()-1);
-			
+			if(encounter_id == NULL)
+			{
+				encounter_id = encounter.getEncounterId();
+			}
+		}
+		
 		/* set the current encounter_id to be associated with Patient Info Page */ 
 		if(encounter_id == EMPTY){
 			encounter_id = encounter.getEncounterId();
@@ -401,8 +399,9 @@ public class PatientInfoActivity extends ExpandableListActivity {
 		child = new ArrayList<Object>();
 		
 		// PREVIOUS REQUESTS / LAB REQUESTS
-		for (int i = 0; i < encounters.size(); i++) {
-			child.add(encounters.get(i));
+		ArrayList<LabRequest> requestlist = db1.getLabRequest(encounter_id);
+		for (int i = 0; i < requestlist.size(); i++) {
+			child.add(requestlist.get(i));
 		}
 		childItems.add(child);
 		child = new ArrayList<Object>();
@@ -410,7 +409,8 @@ public class PatientInfoActivity extends ExpandableListActivity {
 		// NOTES
 		ArrayList<Notes> noteList = db1.getDoctorNotes(encounter_id);
 		Log.d("noteList size", ""+noteList.size());
-		child.add("ADD NEW NOTES");
+		child.add("ADD NEW TEXT NOTES");
+		child.add("ADD NEW IMAGE NOTES");
 		for (int i = 0; i < noteList.size(); i++) {
 			child.add(noteList.get(i));
 		}

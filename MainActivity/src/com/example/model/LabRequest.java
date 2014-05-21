@@ -40,6 +40,16 @@ public class LabRequest
 		
 	}
 	
+	public LabRequest(int referencenumber, int encounternumber, String servicecode, String servicename, int q)
+	{
+		reference_number = referencenumber;
+		encounter_number = encounternumber;
+		service_code =servicecode;
+		service_name = servicename;
+		quantity = q;
+		
+	}
+	
 	public void setRequestNumber(int reference_number)
 	{
 		this.reference_number = reference_number;
@@ -110,5 +120,9 @@ public class LabRequest
 		return services;
 	}
 	
+	public String toString()
+	{
+		return service_code + " " + service_name;
+	}
 
 }

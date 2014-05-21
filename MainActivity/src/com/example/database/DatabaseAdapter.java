@@ -19,6 +19,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.model.Encounter;
+import com.example.model.LabRequest;
 import com.example.model.Notes;
 import com.example.model.Patient;
 import com.example.model.ReferralHelper;
@@ -306,6 +307,7 @@ public class DatabaseAdapter extends Data {
 			String query =
 					"SELECT " +
 						NOTES_ID + "," +
+						PERSONNEL_ID + "," +
 						TITLE + "," +
 						BODY + "," + 
 						TYPE + "," +
@@ -318,7 +320,8 @@ public class DatabaseAdapter extends Data {
 			if(cursor.moveToFirst())
 			{
 				do {
-					int nid = cursor.getInt(cursor.getColumnIndex(NOTES_ID));
+					String nid = cursor.getString(cursor.getColumnIndex(NOTES_ID));
+					int pid = cursor.getInt(cursor.getColumnIndex(PERSONNEL_ID));
 					String title = cursor.getString(cursor.getColumnIndex(TITLE));
 					String body = cursor.getString(cursor.getColumnIndex(BODY));
 					String type = cursor.getString(cursor.getColumnIndex(TYPE));
@@ -335,7 +338,7 @@ public class DatabaseAdapter extends Data {
 						sync = false;
 					}
 					
-					Notes soap = new Notes(nid, eid, title, body, type, date_created, sync);
+					Notes soap = new Notes(nid, eid, pid, title, body, type, date_created, sync);
 					notelist.add(soap);
 				} while (cursor.moveToNext());
 			}
@@ -400,5 +403,39 @@ public class DatabaseAdapter extends Data {
 		
 		return referral_list;
 	}
-
+	
+	public ArrayList<LabRequest> getLabRequest (int eid){
+		ArrayList<LabRequest> requestlist = new ArrayList<LabRequest>();
+		db = dbHandler.getWritableDatabase();
+		
+		try{
+			String query = "SELECT request_id, " +
+							"service_code, service_name " +
+							"quantity WHERE encounter_id = " + eid;
+			Cursor cursor = db.rawQuery(query, null);
+			
+			if(cursor.moveToFirst())
+			{
+				do
+				{
+					int rid = cursor.getInt(cursor.getColumnIndex("request_id"));
+					String servicecode = cursor.getString(cursor.getColumnIndex("service_code"));
+					String servicename = cursor.getString(cursor.getColumnIndex("service_name"));
+					int q = cursor.getInt(cursor.getColumnIndex("quantity"));
+					
+					LabRequest request = new LabRequest(rid, eid, servicecode, servicename, q);
+					requestlist.add(request);
+				}while(cursor.moveToNext());
+			}
+			
+		}
+		catch (Exception e) {
+			Log.d("getReferralHelpers", e.toString());
+		} finally {
+			db.close();
+		}
+		
+		return requestlist;
+	}
+	
 }

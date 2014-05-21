@@ -1,8 +1,9 @@
 package com.example.model;
 
 public class Notes {
-	private int notes_id;
+	private String notes_id;
 	private int encounter_id;
+	private int personel_id;
 	private String title;
 	private String body;
 	private String type;
@@ -10,8 +11,9 @@ public class Notes {
 	private boolean sync;
 	
 	public Notes() {
-		notes_id = -1;
+		notes_id = null;
 		encounter_id = -1;
+		personel_id = -1;
 		title = null;
 		body = null;
 		type = null;
@@ -19,9 +21,10 @@ public class Notes {
 		sync = false;
 	}
 	
-	public Notes(int nid, int eid, String title, String body, String type, String date_created, boolean sync) {
+	public Notes(String nid, int eid, int pid, String title, String body, String type, String date_created, boolean sync) {
 		this.notes_id = nid;
 		this.encounter_id = eid;
+		this.personel_id = pid;
 		this.title = title;
 		this.body = body;
 		this.type = type;
@@ -29,7 +32,7 @@ public class Notes {
 		this.sync = sync;
 	}
 	
-	public int getNotes_id() {
+	public String getNotes_id() {
 		return notes_id;
 	}
 
@@ -57,7 +60,7 @@ public class Notes {
 		return sync;
 	}
 
-	public void setNotes_id(int notes_id) {
+	public void setNotes_id(String notes_id) {
 		this.notes_id = notes_id;
 	}
 
@@ -84,7 +87,15 @@ public class Notes {
 	public void setSync(boolean sync) {
 		this.sync = sync;
 	}
-	
+
+	public int getPersonel_id() {
+		return personel_id;
+	}
+
+	public void setPersonel_id(int personel_id) {
+		this.personel_id = personel_id;
+	}
+
 	public String toString() {
 		return this.title + "\n" + this.type + "\n" + this.date_created.substring(0,10);
 	}

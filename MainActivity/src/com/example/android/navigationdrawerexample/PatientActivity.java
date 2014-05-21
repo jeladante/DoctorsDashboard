@@ -47,7 +47,7 @@ public class PatientActivity extends BaseActivity {
 	//private final String encounters_url = getBaseURL() + "/encounter/";
 	
 	private int patient_id;
-	
+	private final int NULL = -1;
 	private Context context;
 	
 	@Override
@@ -149,6 +149,7 @@ public class PatientActivity extends BaseActivity {
 				/* saves the patient_id and encounter_id to be passed to the next activity */
 				extras = new Bundle();
 				extras.putInt("EXTRA_PATIENT_ID", patient_id);
+				extras.putInt("EXTRA_ENCOUNTER_ID", NULL);
 				
 				/* sets current patient by saving the pid of the selected patient in preferences */
 				Preferences.setPatientId(context, patient_id); /* key = "key_patient_id" */
